@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://your-docusaurus-site.example.com/blog</id>
+    <title>Rocinante Blog</title>
+    <updated>2024-02-10T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://your-docusaurus-site.example.com/blog"/>
+    <subtitle>Rocinante Blog</subtitle>
+    <icon>https://your-docusaurus-site.example.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>https://your-docusaurus-site.example.com/blog/Welcome</id>
+        <link href="https://your-docusaurus-site.example.com/blog/Welcome"/>
+        <updated>2024-02-10T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Our project Rocinante released. Soon will be came so many cool features.]]></summary>
+        <content type="html"><![CDATA[<p>Our project <strong>Rocinante</strong> released. Soon will be came so many cool features.</p>]]></content>
+        <author>
+            <name>Ibrahim Dagdelen</name>
+            <uri>https://github.com/idalavye</uri>
+        </author>
+        <category label="rocinante" term="rocinante"/>
+    </entry>
+</feed>
