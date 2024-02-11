@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkrocinante=self.webpackChunkrocinante||[]).push([[112],{3936:e=>{e.exports=JSON.parse('[{"label":"rocinante","permalink":"/Rocinante/blog/tags/rocinante","count":1}]')}}]);
