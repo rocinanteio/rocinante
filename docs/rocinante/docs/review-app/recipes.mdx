@@ -1,0 +1,72 @@
+---
+sidebar_position: 3
+---
+
+# Recipes
+
+## Docker Pull Secret
+If you are using a private docker registry, you are probably using a secret to pull these images.  When using *Rocinante*, you can easily pass this secret information to **Rocinante Core**. It will automatically inject this secret when creating your manifests.
+```yaml
+apiVersion: roci.io/v1beta1
+kind: ReviewApp
+version: 0.0.1
+metadata:
+  name: reviewapp-sample
+  namespace: roci-test
+spec:
+  override:
+    deployment:
+      spec:
+        template:
+          spec:
+            imagePullSecrets:
+              - name: ty-registry-secret
+```
+
+This secret will be inject automatically to the ReviewApp Manifests.
+
+:::tip
+The spec under override deployment is actually the spec properties of an ordinary Kubernetes **Deployment** object. You can override anything you want, not just **imagePullSecrets**.
+:::
+
+## Override Rocinante Core API Objects
+You may want to pass extra information to the Rocinante Core app. We give you the possibility to override it.
+```yaml
+apiVersion: roci.io/v1beta1
+kind: ReviewApp
+version: 0.0.1
+metadata:
+  name: reviewapp-sample
+  namespace: roci-test
+spec:
+  coreDeployment:
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          annotations:
+            roci.io/inject: "true"
+            roci.io/authoriazation: "true"
+  coreService:
+    metadata:
+      annotations:
+        roci.io/inject: "true"
+        roci.io/authoriazation: "true"
+```
+
+## Override Rocinante UI Objects
+You may want to pass extra information to the Rocinante UI. We give you the possibility to override it.
+```yaml
+apiVersion: roci.io/v1beta1
+kind: ReviewApp
+version: 0.0.1
+metadata:
+  name: reviewapp-sample
+  namespace: roci-test
+spec:
+  uiService:
+    metadata:
+      annotations:
+        roci.io/inject: "true"
+        roci.io/authoriazation: "true"
+````

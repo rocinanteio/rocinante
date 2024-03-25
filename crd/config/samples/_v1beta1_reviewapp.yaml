@@ -1,0 +1,12 @@
+apiVersion: roci.io/v1beta1
+kind: ReviewApp
+metadata:
+  labels:
+    app.kubernetes.io/name: reviewapp
+    app.kubernetes.io/instance: reviewapp-sample
+    app.kubernetes.io/part-of: crd
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: crd
+  name: reviewapp-sample
+spec:
+  # TODO(user): Add fields here

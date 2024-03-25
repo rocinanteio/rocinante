@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  nestjs-app:
+    build:
+      context: ./core
+    ports:
+      - "3000:3000"
+    environment:
+      - DOCKER_TLS_CERTDIR=
+      - DOCKER_HOST=dind-daemon:2375
+    networks:
+      - app-network
+    volumes:
+      - docker-graph-storage:/var/lib/docker
+  react-app:
+    build:
+      context: ./ui
+    ports:
+      - "4001:4001"
+    networks:
+      - app-network
+
+  dind-daemon:
+    image: docker:dind
+    environment:
+      - DOCKER_TLS_CERTDIR=
+    privileged: true
+    ports:
+      - "2375:2375"
+    volumes:
+      - docker-graph-storage:/var/lib/docker
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  docker-graph-storage:

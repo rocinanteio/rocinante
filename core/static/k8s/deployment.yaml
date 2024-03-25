@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <project-name>
+  namespace: <project-namespace>
+  annotations:
+    roci.io/reviewapp: "true"
+  labels:
+    app: <project-name>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <project-name>
+  template:
+    metadata:
+      labels:
+        app: <project-name>
+    spec:
+      #roci-template__<image-pull-secrets>
+      containers:
+        - name: <project-name>
+          image: <project-image>
+          ports:
+            - containerPort: <project-port>
+          resources:
+            requests:
+              cpu: 20m
+              memory: 512Mi
+
