@@ -351,12 +351,12 @@ func newClusterRole(app *rociiov1beta1.ReviewApp) *v1rbca.ClusterRole {
 		},
 		Rules: []v1rbca.PolicyRule{
 			{
-				Verbs:     []string{"get", "list", "watch", "create", "update", "patch", "delete"},
+				Verbs:     []string{"get", "list", "watch", "create", "update", "patch"},
 				APIGroups: []string{""},
 				Resources: []string{"pods", "services"},
 			},
 			{
-				Verbs:     []string{"get", "list", "create", "update", "patch", "delete"},
+				Verbs:     []string{"get", "list", "create", "update", "patch"},
 				APIGroups: []string{"apps"},
 				Resources: []string{"deployments"},
 			},
