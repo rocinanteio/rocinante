@@ -45,7 +45,7 @@ type ReviewAppReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=*,resources=reviewapps;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;list;watch;create;update;patch
+//+kubebuilder:rbac:groups=*,resources=reviewapps;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=*,resources=reviewapps/status;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;update;patch
 //+kubebuilder:rbac:groups=*,resources=reviewapps/finalizers;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=update
 

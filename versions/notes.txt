@@ -1,0 +1,7 @@
+make docker-build IMG=idalavye/rocinante-manager:0.0.4
+make docker-push IMG=idalavye/rocinante-manager:0.0.4
+make dry-run IMG=idalavye/rocinante-manager:0.0.4
+
+k config use-context kubernetes-admin@s-discovery-p1-1mars
+k config use-context orbstack
+
