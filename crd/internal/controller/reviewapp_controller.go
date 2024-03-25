@@ -45,7 +45,7 @@ type ReviewAppReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=*,resources=reviewapps;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=*,resources=reviewapps;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;list;watch;create;update;patch
 //+kubebuilder:rbac:groups=*,resources=reviewapps/status;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;update;patch
 //+kubebuilder:rbac:groups=*,resources=reviewapps/finalizers;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=update
 
@@ -351,12 +351,12 @@ func newClusterRole(app *rociiov1beta1.ReviewApp) *v1rbca.ClusterRole {
 		},
 		Rules: []v1rbca.PolicyRule{
 			{
-				Verbs:     []string{"get", "list", "watch", "create", "update", "patch"},
+				Verbs:     []string{"get", "list", "watch", "create", "update", "patch", "delete"},
 				APIGroups: []string{""},
 				Resources: []string{"pods", "services"},
 			},
 			{
-				Verbs:     []string{"get", "list", "create", "update", "patch"},
+				Verbs:     []string{"get", "list", "create", "update", "patch", "delete"},
 				APIGroups: []string{"apps"},
 				Resources: []string{"deployments"},
 			},
