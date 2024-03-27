@@ -5,11 +5,13 @@ import { AppConfig } from '../../config/models/app.config';
 import { ProjectConfig } from '../../config/models/project.config';
 import { K8sConfig } from '../configs/k8s.config';
 import { ProjectImage } from '../../../projects/model/project-image';
+import { removeFile } from '../../../shared/utils/fs.utils';
 
 export class K8sObject {
   public deployment: K8sDeploymentObject;
   public service: K8sServiceObject;
   public server: string;
+  static readonly GENERATED_PATH = '/static/_generated/k8s';
 
   constructor(
     public readonly projectName: string,
@@ -64,5 +66,9 @@ export class K8sObject {
     );
 
     return this;
+  }
+
+  clean() {
+    removeFile(`${K8sObject.GENERATED_PATH}/${this.projectImage}`);
   }
 }

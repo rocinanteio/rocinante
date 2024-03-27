@@ -17,3 +17,7 @@ export const readFile = (location: string): Buffer => {
 export const writeFile = (location: string, data: string): Buffer => {
   return fse.outputFileSync(path.join(process.cwd() + location), data, {});
 };
+
+export const removeFile = (location: string) => {
+  return fse.remove(path.join(process.cwd() + location));
+};

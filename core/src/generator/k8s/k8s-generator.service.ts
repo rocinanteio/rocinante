@@ -43,6 +43,8 @@ export class K8sGeneratorService {
       await this.k8sService.apply(`${process.cwd()}${object.service.filePath}`);
       this.logger.debug('k8s applied service');
       this.logger.debug('k8s stage completed');
+      object.clean();
+      this.logger.debug('cleaned created manifests');
     } catch (e) {
       const message = e?.body?.message || 'an error occurred when k8s proceses';
       this.logger.error(message);
@@ -75,6 +77,9 @@ export class K8sGeneratorService {
       await this.k8sService.apply(`${process.cwd()}${object.service.filePath}`);
       handleLogs('k8s applied service');
       handleLogs('k8s stage completed');
+
+      object.clean();
+      this.logger.debug('cleaned created manifests');
 
       return object;
     } catch (e) {

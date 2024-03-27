@@ -29,7 +29,7 @@ export class K8sDeploymentObject {
     const _baseYaml: KubernetesObject = yaml.load(_base);
     const _finalYaml = mergeK8sObject(_baseYaml, config.overrideDeployment);
 
-    this.filePath = `/static/_generated/k8s/${targetLocation}/deployment.yaml`;
+    this.filePath = `${K8sObject.GENERATED_PATH}/${targetLocation}/deployment.yaml`;
     writeFile(this.filePath, yaml.dump(_finalYaml));
   }
 }

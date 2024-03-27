@@ -33,7 +33,7 @@ export class K8sServiceObject {
     const _baseYaml: KubernetesObject = yaml.load(_base);
     const _finalYaml = mergeK8sObject(_baseYaml, config.overrideService);
 
-    this.filePath = `/static/_generated/k8s/${targetLocation}/service.yaml`;
+    this.filePath = `${K8sObject.GENERATED_PATH}/${targetLocation}/service.yaml`;
     writeFile(this.filePath, yaml.dump(_finalYaml));
   }
 }

@@ -26,17 +26,17 @@ export class DockerGeneratorService {
     };
 
     handler('Docker Login');
-    await dockerfile.login(handler);
+    // await dockerfile.login(handler);
 
     handler('Docker Build Started');
-    await dockerfile.build(project, handler);
+    // await dockerfile.build(project, handler);
     handler('Docker Build Completed');
 
     handler('Docker Registry Push Started');
-    await dockerfile.push(project, handler);
+    // await dockerfile.push(project, handler);
     handler('Docker Registry Push Completed');
 
-    await dockerfile.logout(handler);
+    // await dockerfile.logout(handler);
     handler('Dockerize Step Completed');
     handler(`Created Image ====> ${dockerfile.imageName}`);
 
