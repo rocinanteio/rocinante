@@ -164,6 +164,17 @@ spec:
                   service:
                     x-kubernetes-preserve-unknown-fields: true
                 type: object
+              registry:
+                properties:
+                  core:
+                    type: string
+                  imagePullSecrets:
+                    items:
+                      type: string
+                    type: array
+                  ui:
+                    type: string
+                type: object
               uiService:
                 x-kubernetes-preserve-unknown-fields: true
               variables:
@@ -224,7 +235,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: role
     app.kubernetes.io/part-of: crd
-  name: crd-leader-election-role
+  name: rocinante-leader-election-role
   namespace: rocinante
 rules:
 - apiGroups:
@@ -277,6 +288,7 @@ rules:
   - services
   verbs:
   - create
+  - delete
   - get
   - list
   - patch
@@ -321,7 +333,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: clusterrole
     app.kubernetes.io/part-of: crd
-  name: crd-metrics-reader
+  name: rocinante-metrics-reader
 rules:
 - nonResourceURLs:
   - /metrics
@@ -338,7 +350,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: clusterrole
     app.kubernetes.io/part-of: crd
-  name: crd-proxy-role
+  name: rocinante-proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -363,12 +375,12 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: rolebinding
     app.kubernetes.io/part-of: crd
-  name: crd-leader-election-rolebinding
+  name: rocinante-leader-election-rolebinding
   namespace: rocinante
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: crd-leader-election-role
+  name: rocinante-leader-election-role
 subjects:
 - kind: ServiceAccount
   name: rocinante-controller-manager
@@ -404,11 +416,11 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: clusterrolebinding
     app.kubernetes.io/part-of: crd
-  name: crd-proxy-rolebinding
+  name: rocinante-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: crd-proxy-role
+  name: rocinante-proxy-role
 subjects:
 - kind: ServiceAccount
   name: rocinante-controller-manager
