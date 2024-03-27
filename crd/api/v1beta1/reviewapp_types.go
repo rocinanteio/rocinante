@@ -33,8 +33,9 @@ type Override struct {
 	Service v1core.Service `json:"service,omitempty"`
 }
 type ReviewAppSpec struct {
-	Env      []v1core.EnvVar `json:"env,omitempty"`
-	Override Override        `json:"override,omitempty"`
+	Env      []v1core.EnvVar   `json:"env,omitempty"`
+	Override Override          `json:"override,omitempty"`
+	Registry ReviewAppRegistry `json:"registry,omitempty"`
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	CoreDeployment v1.Deployment `json:"coreDeployment,omitempty"`
@@ -45,6 +46,12 @@ type ReviewAppSpec struct {
 	// +kubebuilder:validation:Schemaless
 	CoreService v1core.Service     `json:"coreService,omitempty"`
 	Variables   ReviewAppVariables `json:"variables"`
+}
+
+type ReviewAppRegistry struct {
+	Ui               string   `json:"ui,omitempty"`
+	Core             string   `json:"core,omitempty"`
+	ImagePullSecrets []string `json:"imagePullSecrets,omitempty"`
 }
 
 // ReviewAppStatus defines the observed state of ReviewApp

@@ -21,12 +21,11 @@ import (
 	"fmt"
 	"github.com/idalavye/rocinante/internal/constants"
 	"github.com/idalavye/rocinante/internal/object-utils"
+	"github.com/idalavye/rocinante/internal/resources"
 	v1 "k8s.io/api/apps/v1"
 	v1core "k8s.io/api/core/v1"
-	v1rbca "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/json"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
@@ -52,6 +51,9 @@ type ReviewAppReconciler struct {
 func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
+	reviewAppClient := r.Client
+	reviewAppSchema := r.Scheme
+
 	// Fetch the ProjectX instance
 	reviewApp := &rociiov1beta1.ReviewApp{}
 	err := r.Get(ctx, req.NamespacedName, reviewApp)
@@ -60,152 +62,108 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	// Create Service Account
-	serviceAccount := &v1core.ServiceAccount{}
-	err = r.Get(ctx, client.ObjectKey{
+	account := resources.ServiceAccount{
 		Name:      constants.GetServiceAccountName(reviewApp),
-		Namespace: reviewApp.Namespace,
-	}, serviceAccount)
+		NameSpace: reviewApp.Namespace,
+		Client:    reviewAppClient,
+		Schema:    reviewAppSchema,
+		Ctx:       &ctx,
+		Req:       &req,
+		ReviewApp: reviewApp,
+	}
+	_, err = account.Get()
 	if err != nil {
-		fmt.Println("Creating service account")
-		serviceAccount := newServiceAccount(reviewApp)
-
-		if err := controllerutil.SetControllerReference(reviewApp, serviceAccount, r.Scheme); err != nil {
-			fmt.Println("An error occurred here", err.Error())
-			return reconcile.Result{}, err
-		}
-
-		err := r.Create(ctx, serviceAccount)
-		fmt.Println("Created service account")
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-	} else if err == nil {
-		updatedServiceAccount := serviceAccount.DeepCopy()
-		if err := r.Update(ctx, updatedServiceAccount); err != nil {
-			return reconcile.Result{}, err
-		}
+		return reconcile.Result{}, err
 	}
 
-	// Create Service For Core
-	service := &v1core.Service{}
-	err = r.Get(ctx, client.ObjectKey{
+	// Create Core Service
+	coreService := resources.Service{
 		Name:      constants.GetCoreServiceName(reviewApp),
-		Namespace: reviewApp.Namespace,
-	}, service)
+		NameSpace: reviewApp.Namespace,
+		Port:      int32(constants.GetCoreServicePort(reviewApp)),
+		NodePort:  int32(constants.GetCoreServiceNodePort(reviewApp)),
+		AppName:   constants.GetAppName(reviewApp),
+		Override:  &reviewApp.Spec.CoreService,
+		Client:    reviewAppClient,
+		Schema:    reviewAppSchema,
+		Ctx:       &ctx,
+		Req:       &req,
+		ReviewApp: reviewApp,
+	}
+	_, err = coreService.Get()
 	if err != nil {
-		service := newServiceForCore(reviewApp)
-
-		if err := controllerutil.SetControllerReference(reviewApp, service, r.Scheme); err != nil {
-			return reconcile.Result{}, err
-		}
-
-		err := r.Create(ctx, service)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-	} else if err == nil {
-		if err := r.Update(ctx, newServiceForCore(reviewApp)); err != nil {
-			return reconcile.Result{}, err
-		}
+		return reconcile.Result{}, err
 	}
 
-	// Create Service For Core Socket
-	serviceForSocket := &v1core.Service{}
-	err = r.Get(ctx, client.ObjectKey{
+	// Create Core Socket Service
+	coreSocketService := resources.Service{
 		Name:      constants.GetCoreSocketServiceName(reviewApp),
-		Namespace: reviewApp.Namespace,
-	}, serviceForSocket)
+		NameSpace: reviewApp.Namespace,
+		Port:      int32(constants.GetCoreServiceSocketPort(reviewApp)),
+		NodePort:  int32(constants.GetCoreServiceSocketNodePort(reviewApp)),
+		AppName:   constants.GetAppName(reviewApp),
+		Override:  &reviewApp.Spec.CoreService,
+		Client:    reviewAppClient,
+		Schema:    reviewAppSchema,
+		Ctx:       &ctx,
+		Req:       &req,
+		ReviewApp: reviewApp,
+	}
+	_, err = coreSocketService.Get()
 	if err != nil {
-		serviceForSocket := newServiceForCoreSocket(reviewApp)
-
-		if err := controllerutil.SetControllerReference(reviewApp, service, r.Scheme); err != nil {
-			return reconcile.Result{}, err
-		}
-
-		err := r.Create(ctx, serviceForSocket)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-	} else if err == nil {
-		if err := r.Update(ctx, newServiceForCoreSocket(reviewApp)); err != nil {
-			return reconcile.Result{}, err
-		}
+		return reconcile.Result{}, err
 	}
 
-	// Create Service For Ui
-	serviceUi := &v1core.Service{}
-	err = r.Get(ctx, client.ObjectKey{
+	// Create Ui Service
+	coreUiService := resources.Service{
 		Name:      constants.GetUiServiceName(reviewApp),
-		Namespace: reviewApp.Namespace,
-	}, serviceUi)
+		NameSpace: reviewApp.Namespace,
+		Port:      int32(constants.GetUiServicePort(reviewApp)),
+		NodePort:  int32(constants.GetUiServiceNodePort(reviewApp)),
+		AppName:   constants.GetAppName(reviewApp),
+		Override:  &reviewApp.Spec.UiService,
+		Client:    reviewAppClient,
+		Schema:    reviewAppSchema,
+		Ctx:       &ctx,
+		Req:       &req,
+		ReviewApp: reviewApp,
+	}
+	_, err = coreUiService.Get()
 	if err != nil {
-		serviceUi := newServiceForUi(reviewApp)
-
-		if err := controllerutil.SetControllerReference(reviewApp, serviceUi, r.Scheme); err != nil {
-			return reconcile.Result{}, err
-		}
-
-		err := r.Create(ctx, serviceUi)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-	} else if err == nil {
-		if err := r.Update(ctx, newServiceForUi(reviewApp)); err != nil {
-			return reconcile.Result{}, err
-		}
+		return reconcile.Result{}, err
 	}
 
 	// Create Cluster Role
-	clusterRole := &v1rbca.ClusterRole{}
-	err = r.Get(ctx, client.ObjectKey{
+	clusterRole := resources.ClusterRole{
 		Name:      constants.GetClusterRoleName(reviewApp),
-		Namespace: reviewApp.Namespace,
-	}, clusterRole)
-	if err != nil {
-		clusterRole := newClusterRole(reviewApp)
-
-		if err := controllerutil.SetControllerReference(reviewApp, clusterRole, r.Scheme); err != nil {
-			return reconcile.Result{}, err
-		}
-
-		err := r.Create(ctx, clusterRole)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-	} else if err == nil {
-		updatedClusterRole := clusterRole.DeepCopy()
-		if err := r.Update(ctx, updatedClusterRole); err != nil {
-			return reconcile.Result{}, err
-		}
+		NameSpace: reviewApp.Namespace,
+		Client:    reviewAppClient,
+		Schema:    reviewAppSchema,
+		Ctx:       &ctx,
+		Req:       &req,
+		ReviewApp: reviewApp,
 	}
 
-	clusterRoleBinding := &v1rbca.ClusterRoleBinding{}
-	err = r.Get(ctx, client.ObjectKey{
-		Namespace: reviewApp.Namespace,
-		Name:      constants.GetClusterRoleBindingName(reviewApp),
-	}, clusterRoleBinding)
+	_, err = clusterRole.Get()
 	if err != nil {
-		clusterRoleBinding := newClusterRoleBinding(reviewApp)
+		return reconcile.Result{}, err
+	}
 
-		if err := controllerutil.SetControllerReference(reviewApp, clusterRoleBinding, r.Scheme); err != nil {
-			return reconcile.Result{}, err
-		}
-
-		err := r.Create(ctx, clusterRoleBinding)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-	} else if err == nil {
-		updatedClusterRoleBinding := clusterRoleBinding.DeepCopy()
-		if err := r.Update(ctx, updatedClusterRoleBinding); err != nil {
-			return reconcile.Result{}, err
-		}
+	// Create Cluster Role Binding
+	clusterRoleBinding := resources.ClusterRoleBinding{
+		Name:               constants.GetClusterRoleBindingName(reviewApp),
+		NameSpace:          reviewApp.Namespace,
+		ServiceAccountName: constants.GetServiceAccountName(reviewApp),
+		ClusterRoleName:    constants.GetClusterRoleName(reviewApp),
+		Client:             reviewAppClient,
+		Schema:             reviewAppSchema,
+		Ctx:                &ctx,
+		Req:                &req,
+		ReviewApp:          reviewApp,
+	}
+	_, err = clusterRoleBinding.Get()
+	if err != nil {
+		return reconcile.Result{}, err
 	}
 
 	// Create Deployment
@@ -227,7 +185,7 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 	} else if err == nil {
 		// Deployment exists, update it
-		updatedDeployment := updateDeployment(newDeployment(reviewApp), reviewApp)
+		updatedDeployment := updateDeployment(newDeployment(reviewApp))
 		if err := r.Update(ctx, updatedDeployment); err != nil {
 			return reconcile.Result{}, err
 		}
@@ -236,137 +194,7 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	return ctrl.Result{}, nil
 }
 
-func newServiceForCore(app *rociiov1beta1.ReviewApp) *v1core.Service {
-	service := &v1core.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.GetCoreServiceName(app),
-			Namespace: app.Namespace,
-		},
-		Spec: v1core.ServiceSpec{
-			Ports: []v1core.ServicePort{
-				{
-					Protocol:   "TCP",
-					Port:       int32(constants.GetCoreServicePort(app)),
-					TargetPort: intstr.FromInt(constants.GetCoreServicePort(app)),
-					NodePort:   int32(constants.GetCoreServiceNodePort(app)),
-				},
-			},
-			Selector: map[string]string{"app": constants.GetAppName(app)},
-			Type:     "NodePort",
-		},
-	}
-
-	return object_utils.MergeServices(service, &app.Spec.CoreService)
-}
-
-func newServiceForCoreSocket(app *rociiov1beta1.ReviewApp) *v1core.Service {
-	service := &v1core.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.GetCoreSocketServiceName(app),
-			Namespace: app.Namespace,
-		},
-		Spec: v1core.ServiceSpec{
-			Ports: []v1core.ServicePort{
-				{
-					Protocol:   "TCP",
-					Port:       int32(constants.GetCoreServiceSocketPort(app)),
-					TargetPort: intstr.FromInt(constants.GetCoreServiceSocketPort(app)),
-					NodePort:   int32(constants.GetCoreServiceSocketNodePort(app)),
-				},
-			},
-			Selector: map[string]string{"app": constants.GetAppName(app)},
-			Type:     "NodePort",
-		},
-	}
-
-	return object_utils.MergeServices(service, &app.Spec.CoreService)
-}
-
-func newServiceForUi(app *rociiov1beta1.ReviewApp) *v1core.Service {
-	service := &v1core.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.GetUiServiceName(app),
-			Namespace: app.Namespace,
-		},
-		Spec: v1core.ServiceSpec{
-			Ports: []v1core.ServicePort{
-				{
-					Protocol:   "TCP",
-					Port:       int32(constants.GetUiServicePort(app)),
-					TargetPort: intstr.FromInt(constants.GetUiServicePort(app)),
-					NodePort:   int32(constants.GetUiServiceNodePort(app)),
-				},
-			},
-			Selector: map[string]string{"app": constants.GetAppName(app)},
-			Type:     "NodePort",
-		},
-	}
-
-	return object_utils.MergeServices(service, &app.Spec.UiService)
-}
-
-func newServiceAccount(app *rociiov1beta1.ReviewApp) *v1core.ServiceAccount {
-	serviceAccount := &v1core.ServiceAccount{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.GetServiceAccountName(app),
-			Namespace: app.Namespace,
-		},
-	}
-
-	return serviceAccount
-}
-
-func newClusterRoleBinding(app *rociiov1beta1.ReviewApp) *v1rbca.ClusterRoleBinding {
-	clusterRoleBinding := &v1rbca.ClusterRoleBinding{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.GetClusterRoleBindingName(app),
-			Namespace: app.Namespace,
-		},
-		Subjects: []v1rbca.Subject{
-			{
-				Kind:      "ServiceAccount",
-				Name:      constants.GetServiceAccountName(app),
-				Namespace: app.Namespace,
-			},
-		},
-		RoleRef: v1rbca.RoleRef{
-			APIGroup: "rbac.authorization.k8s.io",
-			Kind:     "ClusterRole",
-			Name:     constants.GetClusterRoleName(app),
-		},
-	}
-
-	return clusterRoleBinding
-}
-
-func newClusterRole(app *rociiov1beta1.ReviewApp) *v1rbca.ClusterRole {
-	clusterRole := &v1rbca.ClusterRole{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "ClusterRole",
-			APIVersion: "rbac.authorization.k8s.io/v1",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.GetClusterRoleName(app),
-			Namespace: app.Namespace,
-		},
-		Rules: []v1rbca.PolicyRule{
-			{
-				Verbs:     []string{"get", "list", "watch", "create", "update", "patch", "delete"},
-				APIGroups: []string{""},
-				Resources: []string{"pods", "services"},
-			},
-			{
-				Verbs:     []string{"get", "list", "create", "update", "patch", "delete"},
-				APIGroups: []string{"apps"},
-				Resources: []string{"deployments"},
-			},
-		},
-	}
-
-	return clusterRole
-}
-
-func updateDeployment(existingDeployment *v1.Deployment, app *rociiov1beta1.ReviewApp) *v1.Deployment {
+func updateDeployment(existingDeployment *v1.Deployment) *v1.Deployment {
 	deployment := existingDeployment.DeepCopy()
 	return deployment
 }
@@ -378,7 +206,14 @@ func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
 	replica := int32(1)
 
 	coreImageName := strings.Join([]string{"idalavye/rocinante-core", app.Version}, ":")
+	if app.Spec.Registry.Core != "" {
+		coreImageName = strings.Join([]string{app.Spec.Registry.Core, app.Version}, ":")
+	}
+
 	uiImageName := strings.Join([]string{"idalavye/rocinante-ui", app.Version}, ":")
+	if app.Spec.Registry.Ui != "" {
+		uiImageName = strings.Join([]string{app.Spec.Registry.Ui, app.Version}, ":")
+	}
 
 	coreEnvs := []v1core.EnvVar{
 		{
@@ -509,6 +344,11 @@ func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
 				},
 			},
 		},
+	}
+
+	// Add Image Pull Secrets
+	for _, secret := range app.Spec.Registry.ImagePullSecrets {
+		defaultDeployment.Spec.Template.Spec.ImagePullSecrets = append(defaultDeployment.Spec.Template.Spec.ImagePullSecrets, v1core.LocalObjectReference{Name: secret})
 	}
 
 	return object_utils.MergeDeployments(defaultDeployment, &app.Spec.CoreDeployment)

@@ -70,3 +70,20 @@ spec:
         roci.io/inject: "true"
         roci.io/authoriazation: "true"
 ````
+
+## Using Custom Registry
+If you want to get code and ui services from your own environment and not from the public registry, you can use the following config.
+```yaml
+apiVersion: roci.io/v1beta1
+kind: ReviewApp
+version: lib-ui-0.0.5
+metadata:
+  name: reviewapp-sample
+  namespace: roci-test
+spec:
+  registry:
+    ui: registry.company.com/team/rocinante
+    core: registry.company.com/team/rocinante
+    imagePullSecrets:
+      - ty-registry-secrets
+````

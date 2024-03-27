@@ -152,6 +152,17 @@ spec:
                   service:
                     x-kubernetes-preserve-unknown-fields: true
                 type: object
+              registry:
+                properties:
+                  core:
+                    type: string
+                  imagePullSecrets:
+                    items:
+                      type: string
+                    type: array
+                  ui:
+                    type: string
+                type: object
               uiService:
                 x-kubernetes-preserve-unknown-fields: true
               variables:
