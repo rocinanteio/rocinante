@@ -17,5 +17,6 @@ COPY ./public ./public
 COPY --from=Build ./.next /.next
 COPY --from=Build ./node_modules /node_modules
 
+EXPOSE 4001
 
 CMD API_URL=${API_URL} npm start

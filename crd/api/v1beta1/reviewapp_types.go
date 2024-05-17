@@ -87,6 +87,7 @@ type ReviewAppVariables struct {
 	CoreApiSocketPort int64  `json:"coreApiSocketPort"`
 	UiPort            int64  `json:"uiPort"`
 	ApiUrl            string `json:"apiUrl"`
+	HostUrl           string `json:"hostUrl"`
 }
 
 func init() {

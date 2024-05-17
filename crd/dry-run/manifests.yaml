@@ -187,6 +187,8 @@ spec:
                   coreApiSocketPort:
                     format: int64
                     type: integer
+                  hostUrl:
+                    type: string
                   uiPort:
                     format: int64
                     type: integer
@@ -194,6 +196,7 @@ spec:
                 - apiUrl
                 - coreApiPort
                 - coreApiSocketPort
+                - hostUrl
                 - uiPort
                 type: object
             required:
@@ -503,7 +506,7 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: idalavye/rocinante-manager:0.0.1
+        image: idalavye/rocinante-manager:0.0.8
         livenessProbe:
           httpGet:
             path: /healthz

@@ -175,6 +175,8 @@ spec:
                   coreApiSocketPort:
                     format: int64
                     type: integer
+                  hostUrl:
+                    type: string
                   uiPort:
                     format: int64
                     type: integer
@@ -182,6 +184,7 @@ spec:
                 - apiUrl
                 - coreApiPort
                 - coreApiSocketPort
+                - hostUrl
                 - uiPort
                 type: object
             required:

@@ -6,17 +6,20 @@ import {
 import * as k8s from '@kubernetes/client-node';
 import * as yaml from 'js-yaml';
 import { promises as fs } from 'fs';
+import { K8sConfigProviderConfig } from '../generator/k8s/configs/k8s-config-provider.config';
 
 @Injectable()
 export class K8sAdapter implements OnModuleInit {
   k8sApi: k8s.CoreV1Api;
   server: string;
 
+  constructor(private readonly k8sConfigProvider: K8sConfigProviderConfig) {}
+
   onModuleInit() {
     const kc = new k8s.KubeConfig();
     kc.loadFromDefault();
-    const [protocol, ip] = kc.getCurrentCluster().server.split(':');
-    this.server = `${protocol}:${ip}`;
+
+    this.server = this.k8sConfigProvider.host;
     this.k8sApi = kc.makeApiClient(k8s.CoreV1Api);
   }
 

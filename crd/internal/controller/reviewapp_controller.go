@@ -73,7 +73,8 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 	_, err = account.Get()
 	if err != nil {
-		return reconcile.Result{}, err
+		fmt.Println("an error occurred while getting account")
+		//return reconcile.Result{}, err
 	}
 
 	// Create Core Service
@@ -92,7 +93,8 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 	_, err = coreService.Get()
 	if err != nil {
-		return reconcile.Result{}, err
+		fmt.Println("an error occurred while creating core service")
+		//return reconcile.Result{}, err
 	}
 
 	// Create Core Socket Service
@@ -111,7 +113,8 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 	_, err = coreSocketService.Get()
 	if err != nil {
-		return reconcile.Result{}, err
+		fmt.Println("an error occurred while creating core socket service")
+		//return reconcile.Result{}, err
 	}
 
 	// Create Ui Service
@@ -130,7 +133,8 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 	_, err = coreUiService.Get()
 	if err != nil {
-		return reconcile.Result{}, err
+		fmt.Println("an error occurred while creating core ui service")
+		//return reconcile.Result{}, err
 	}
 
 	// Create Cluster Role
@@ -146,7 +150,7 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	_, err = clusterRole.Get()
 	if err != nil {
-		return reconcile.Result{}, err
+		//return reconcile.Result{}, err
 	}
 
 	// Create Cluster Role Binding
@@ -163,7 +167,7 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 	_, err = clusterRoleBinding.Get()
 	if err != nil {
-		return reconcile.Result{}, err
+		//return reconcile.Result{}, err
 	}
 
 	// Create Deployment
@@ -227,6 +231,10 @@ func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
 		{
 			Name:  "REVIEWAPP_NAMESPACE",
 			Value: app.Namespace,
+		},
+		{
+			Name:  "K8S_HOST",
+			Value: app.Spec.Variables.HostUrl,
 		},
 	}
 
@@ -308,7 +316,6 @@ func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
 									ContainerPort: int32(constants.GetUiServicePort(app)),
 								},
 							},
-							Args: []string{""},
 						},
 						{
 							Name:  "dind-daemon",
