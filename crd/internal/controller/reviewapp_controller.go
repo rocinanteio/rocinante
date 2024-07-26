@@ -209,14 +209,15 @@ func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
 
 	replica := int32(1)
 
-	coreImageName := strings.Join([]string{"idalavye/rocinante-core", app.Version}, ":")
+	coreImageName := strings.Join([]string{"idalavye/rocinante-core", app.Spec.Version.Core}, ":")
+
 	if app.Spec.Registry.Core != "" {
-		coreImageName = strings.Join([]string{app.Spec.Registry.Core, app.Version}, ":")
+		coreImageName = strings.Join([]string{app.Spec.Registry.Core, app.Spec.Version.Core}, ":")
 	}
 
-	uiImageName := strings.Join([]string{"idalavye/rocinante-ui", app.Version}, ":")
+	uiImageName := strings.Join([]string{"idalavye/rocinante-ui", app.Spec.Version.Core}, ":")
 	if app.Spec.Registry.Ui != "" {
-		uiImageName = strings.Join([]string{app.Spec.Registry.Ui, app.Version}, ":")
+		uiImageName = strings.Join([]string{app.Spec.Registry.Ui, app.Spec.Version.Core}, ":")
 	}
 
 	coreEnvs := []v1core.EnvVar{

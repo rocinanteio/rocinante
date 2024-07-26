@@ -22,11 +22,13 @@ You can create your review app resource with basic yaml config like below
 ```yaml
 apiVersion: roci.io/v1beta1
 kind: ReviewApp
-version: 0.0.1
 metadata:
   name: reviewapp-sample
   namespace: roci-test
 spec:
+  version:
+    ui: 0.0.4
+    core: 0.0.4
   variables:
     coreApiPort: 30001
     coreApiSocketPort: 30002

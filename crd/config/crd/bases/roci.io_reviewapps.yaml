@@ -187,16 +187,20 @@ spec:
                 - hostUrl
                 - uiPort
                 type: object
+              version:
+                properties:
+                  core:
+                    type: string
+                  ui:
+                    type: string
+                type: object
             required:
             - variables
+            - version
             type: object
           status:
             description: ReviewAppStatus defines the observed state of ReviewApp
             type: object
-          version:
-            type: string
-        required:
-        - version
         type: object
     served: true
     storage: true

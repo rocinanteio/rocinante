@@ -46,6 +46,7 @@ type ReviewAppSpec struct {
 	// +kubebuilder:validation:Schemaless
 	CoreService v1core.Service     `json:"coreService,omitempty"`
 	Variables   ReviewAppVariables `json:"variables"`
+	Version     Version            `json:"version"`
 }
 
 type ReviewAppRegistry struct {
@@ -68,9 +69,13 @@ type ReviewApp struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Version string          `json:"version"`
-	Spec    ReviewAppSpec   `json:"spec,omitempty"`
-	Status  ReviewAppStatus `json:"status,omitempty"`
+	Spec   ReviewAppSpec   `json:"spec,omitempty"`
+	Status ReviewAppStatus `json:"status,omitempty"`
+}
+
+type Version struct {
+	UI   string `json:"ui,omitempty"`
+	Core string `json:"core,omitempty"`
 }
 
 //+kubebuilder:object:root=true
