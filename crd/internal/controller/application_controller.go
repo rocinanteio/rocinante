@@ -55,7 +55,7 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	reviewAppSchema := r.Scheme
 
 	// Fetch the ProjectX instance
-	reviewApp := &rociiov1beta1.ReviewApp{}
+	reviewApp := &rociiov1beta1.Application{}
 	err := r.Get(ctx, req.NamespacedName, reviewApp)
 	if err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
@@ -203,7 +203,7 @@ func updateDeployment(existingDeployment *v1.Deployment) *v1.Deployment {
 	return deployment
 }
 
-func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
+func newDeployment(app *rociiov1beta1.Application) *v1.Deployment {
 	matchers := make(map[string]string)
 	matchers["app"] = constants.GetAppName(app)
 
@@ -365,6 +365,6 @@ func newDeployment(app *rociiov1beta1.ReviewApp) *v1.Deployment {
 // SetupWithManager sets up the controller with the Manager.
 func (r *ReviewAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&rociiov1beta1.ReviewApp{}).
+		For(&rociiov1beta1.Application{}).
 		Complete(r)
 }

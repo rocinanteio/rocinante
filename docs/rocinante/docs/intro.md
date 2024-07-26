@@ -21,9 +21,9 @@ This command will install Rocinante your cluster. You can see this app below the
 You can create your review app resource with basic yaml config like below
 ```yaml
 apiVersion: roci.io/v1beta1
-kind: ReviewApp
+kind: Application
 metadata:
-  name: reviewapp-sample
+  name: application-sample
   namespace: roci-test
 spec:
   version:

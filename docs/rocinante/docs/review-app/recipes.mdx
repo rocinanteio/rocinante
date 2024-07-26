@@ -8,10 +8,10 @@ sidebar_position: 3
 If you are using a private docker registry, you are probably using a secret to pull these images.  When using *Rocinante*, you can easily pass this secret information to **Rocinante Core**. It will automatically inject this secret when creating your manifests.
 ```yaml
 apiVersion: roci.io/v1beta1
-kind: ReviewApp
+kind: Application
 version: 0.0.1
 metadata:
-  name: reviewapp-sample
+  name: application-sample
   namespace: roci-test
 spec:
   override:
@@ -33,10 +33,10 @@ The spec under override deployment is actually the spec properties of an ordinar
 You may want to pass extra information to the Rocinante Core app. We give you the possibility to override it.
 ```yaml
 apiVersion: roci.io/v1beta1
-kind: ReviewApp
+kind: Application
 version: 0.0.1
 metadata:
-  name: reviewapp-sample
+  name: application-sample
   namespace: roci-test
 spec:
   coreDeployment:
@@ -58,10 +58,10 @@ spec:
 You may want to pass extra information to the Rocinante UI. We give you the possibility to override it.
 ```yaml
 apiVersion: roci.io/v1beta1
-kind: ReviewApp
+kind: Application
 version: 0.0.1
 metadata:
-  name: reviewapp-sample
+  name: application-sample
   namespace: roci-test
 spec:
   uiService:
@@ -75,10 +75,10 @@ spec:
 If you want to get code and ui services from your own environment and not from the public registry, you can use the following config.
 ```yaml
 apiVersion: roci.io/v1beta1
-kind: ReviewApp
+kind: Application
 version: lib-ui-0.0.5
 metadata:
-  name: reviewapp-sample
+  name: application-sample
   namespace: roci-test
 spec:
   registry:
