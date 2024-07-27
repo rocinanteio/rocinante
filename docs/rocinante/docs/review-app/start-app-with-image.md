@@ -28,11 +28,11 @@ Core API will be start a new deployment for serving to you. This EP will be retu
 ![img.png](../roci-review-app-sample.png)
 
 ## Using With Pipeline 
-You can integrate ReviewApp to your pipelines. We will provide an image `idalavye/pipeline` 
+You can integrate ReviewApp to your pipelines. We will provide an image `rocinanteio/pipeline` 
 
 ### With Dockerfile
 ```Dockerfile
-FROM idalavye/pipeline
+FROM rocinanteio/pipeline
 
 ENV api="http://localhost:3000"
 ENV socket ="ws://localhost:4002"
@@ -46,7 +46,7 @@ CMD ["deno", "task", "start", "--api=$api --socket=$socket --name=$name --image=
 ### With Gitlab
 ````yaml
 review-app:
-  image: idalavye/pipeline
+  image: rocinanteio/pipeline
   variables:
     API: http://localhost:3000
     SOCKET: ws://localhost:4002

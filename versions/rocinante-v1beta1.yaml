@@ -510,7 +510,7 @@ spec:
             - --leader-elect
           command:
             - /manager
-          image: idalavye/rocinante-manager:0.0.11
+          image: rocinanteio/manager:0.0.1
           livenessProbe:
             httpGet:
               path: /healthz

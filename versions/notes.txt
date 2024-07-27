@@ -1,11 +1,11 @@
-make docker-build IMG=idalavye/rocinante-manager:0.0.4
-make docker-push IMG=idalavye/rocinante-manager:0.0.4
-make dry-run IMG=idalavye/rocinante-manager:0.0.8
+make docker-build IMG=rocinanteio/manager:0.0.1
+make docker-push IMG=rocinanteio/manager:0.0.1
+make dry-run IMG=rocinanteio/manager:0.0.1
 
 k config use-context kubernetes-admin@s-discovery-p1-1mars
 k config use-context orbstack
 
-docker build -t idalavye/rocinante-core:0.0.4 --platform=linux/amd64 .
-docker build -t idalavye/rocinante-ui:0.0.4 --platform=linux/amd64 .
+docker build -t rocinanteio/core:0.0.4 --platform=linux/amd64 .
+docker build -t rocinanteio/ui:0.0.4 --platform=linux/amd64 .
 
-docker push idalavye/rocinante-core:0.0.4
+docker push rocinanteio/core:0.0.4

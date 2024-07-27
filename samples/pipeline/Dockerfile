@@ -1,4 +1,4 @@
-FROM idalavye/pipeline
+FROM rocinanteio/pipeline
 
 ENV api="http://localhost:3000"
 ENV socket ="ws://localhost:4002"
