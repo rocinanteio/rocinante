@@ -27,7 +27,7 @@ export class K8sGeneratorService {
     try {
       this.logger.debug('k8s objects creation started');
       const object = K8sObject.from(dockerizedProject, configs, {
-        projectNamespace: this.configService.get('REVIEWAPP_NAMESPACE'),
+        projectNamespace: this.configService.get('ROCINANTE_NAMESPACE'),
       });
       this.logger.debug('k8s created object configs', object);
       const nodePort = await this.k8sService.getFreeNodePort();
@@ -60,7 +60,7 @@ export class K8sGeneratorService {
 
       handleLogs('k8s objects creation started');
       const object = K8sObject.fromProjectImage(project, {
-        projectNamespace: this.configService.get('REVIEWAPP_NAMESPACE'),
+        projectNamespace: this.configService.get('ROCINANTE_NAMESPACE'),
       });
       handleLogs(`k8s created object configs ${JSON.stringify(object)}`);
       const nodePort = await this.k8sService.getFreeNodePort();

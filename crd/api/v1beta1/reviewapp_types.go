@@ -22,7 +22,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ReviewAppSpec defines the desired state of ReviewApp
+// ApplicationSpec defines the desired state of Application
 
 type Override struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -32,10 +32,10 @@ type Override struct {
 	// +kubebuilder:validation:Schemaless
 	Service v1core.Service `json:"service,omitempty"`
 }
-type ReviewAppSpec struct {
-	Env      []v1core.EnvVar   `json:"env,omitempty"`
-	Override Override          `json:"override,omitempty"`
-	Registry ReviewAppRegistry `json:"registry,omitempty"`
+type ApplicationSpec struct {
+	Env      []v1core.EnvVar     `json:"env,omitempty"`
+	Override Override            `json:"override,omitempty"`
+	Registry ApplicationRegistry `json:"registry,omitempty"`
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	CoreDeployment v1.Deployment `json:"coreDeployment,omitempty"`
@@ -44,19 +44,19 @@ type ReviewAppSpec struct {
 	UiService v1core.Service `json:"uiService,omitempty"`
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	CoreService v1core.Service     `json:"coreService,omitempty"`
-	Variables   ReviewAppVariables `json:"variables"`
-	Version     Version            `json:"version"`
+	CoreService v1core.Service       `json:"coreService,omitempty"`
+	Variables   ApplicationVariables `json:"variables"`
+	Version     Version              `json:"version"`
 }
 
-type ReviewAppRegistry struct {
+type ApplicationRegistry struct {
 	Ui               string   `json:"ui,omitempty"`
 	Core             string   `json:"core,omitempty"`
 	ImagePullSecrets []string `json:"imagePullSecrets,omitempty"`
 }
 
-// ReviewAppStatus defines the observed state of ReviewApp
-type ReviewAppStatus struct {
+// ApplicationStatus defines the observed state of Application
+type ApplicationStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -64,13 +64,13 @@ type ReviewAppStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// ReviewApp is the Schema for the reviewapps API
-type ReviewApp struct {
+// Application is the Schema for the rocinante API
+type Application struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ReviewAppSpec   `json:"spec,omitempty"`
-	Status ReviewAppStatus `json:"status,omitempty"`
+	Spec   ApplicationSpec   `json:"spec,omitempty"`
+	Status ApplicationStatus `json:"status,omitempty"`
 }
 
 type Version struct {
@@ -80,14 +80,14 @@ type Version struct {
 
 //+kubebuilder:object:root=true
 
-// ReviewAppList contains a list of ReviewApp
-type ReviewAppList struct {
+// ApplicationList contains a list of Application
+type ApplicationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ReviewApp `json:"items"`
+	Items           []Application `json:"items"`
 }
 
-type ReviewAppVariables struct {
+type ApplicationVariables struct {
 	CoreApiPort       int64  `json:"coreApiPort"`
 	CoreApiSocketPort int64  `json:"coreApiSocketPort"`
 	UiPort            int64  `json:"uiPort"`
@@ -96,5 +96,5 @@ type ReviewAppVariables struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&ReviewApp{}, &ReviewAppList{})
+	SchemeBuilder.Register(&Application{}, &ApplicationList{})
 }

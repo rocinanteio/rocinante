@@ -12,14 +12,14 @@ import (
 )
 
 type ClusterRole struct {
-	Name      string
-	NameSpace string
-	instance  *v1rbca.ClusterRole
-	Client    client.Client
-	Schema    *runtime.Scheme
-	Ctx       *context.Context
-	Req       *ctrl.Request
-	ReviewApp *rociiov1beta1.ReviewApp
+	Name        string
+	NameSpace   string
+	instance    *v1rbca.ClusterRole
+	Client      client.Client
+	Schema      *runtime.Scheme
+	Ctx         *context.Context
+	Req         *ctrl.Request
+	Application *rociiov1beta1.Application
 }
 
 func (receiver *ClusterRole) Create() {
@@ -60,11 +60,11 @@ func (receiver *ClusterRole) Get() (*v1rbca.ClusterRole, error) {
 
 	err := receiver.Client.Get(*receiver.Ctx, client.ObjectKey{
 		Name:      receiver.Name,
-		Namespace: receiver.ReviewApp.Namespace,
+		Namespace: receiver.Application.Namespace,
 	}, receiver.instance)
 
 	if err != nil {
-		if err := controllerutil.SetControllerReference(receiver.ReviewApp, receiver.instance, receiver.Schema); err != nil {
+		if err := controllerutil.SetControllerReference(receiver.Application, receiver.instance, receiver.Schema); err != nil {
 			return nil, err
 		}
 

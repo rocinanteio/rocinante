@@ -39,37 +39,37 @@ import (
 	rociiov1beta1 "github.com/idalavye/rocinante/api/v1beta1"
 )
 
-type ReviewAppReconciler struct {
+type ApplicationReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=*,resources=reviewapps;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=*,resources=reviewapps/status;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;update;patch
-//+kubebuilder:rbac:groups=*,resources=reviewapps/finalizers;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=update
+//+kubebuilder:rbac:groups=*,resources=applications;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=*,resources=applications/status;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=get;update;patch
+//+kubebuilder:rbac:groups=*,resources=applications/finalizers;pods;deployments;serviceaccounts;services;clusterroles;clusterrolebindings;apps,verbs=update
 
-func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	reviewAppClient := r.Client
-	reviewAppSchema := r.Scheme
+	applicationClient := r.Client
+	applicationSchema := r.Scheme
 
 	// Fetch the ProjectX instance
-	reviewApp := &rociiov1beta1.Application{}
-	err := r.Get(ctx, req.NamespacedName, reviewApp)
+	application := &rociiov1beta1.Application{}
+	err := r.Get(ctx, req.NamespacedName, application)
 	if err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
 	// Create Service Account
 	account := resources.ServiceAccount{
-		Name:      constants.GetServiceAccountName(reviewApp),
-		NameSpace: reviewApp.Namespace,
-		Client:    reviewAppClient,
-		Schema:    reviewAppSchema,
-		Ctx:       &ctx,
-		Req:       &req,
-		ReviewApp: reviewApp,
+		Name:        constants.GetServiceAccountName(application),
+		NameSpace:   application.Namespace,
+		Client:      applicationClient,
+		Schema:      applicationSchema,
+		Ctx:         &ctx,
+		Req:         &req,
+		Application: application,
 	}
 	_, err = account.Get()
 	if err != nil {
@@ -79,17 +79,17 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Create Core Service
 	coreService := resources.Service{
-		Name:      constants.GetCoreServiceName(reviewApp),
-		NameSpace: reviewApp.Namespace,
-		Port:      int32(constants.GetCoreServicePort(reviewApp)),
-		NodePort:  int32(constants.GetCoreServiceNodePort(reviewApp)),
-		AppName:   constants.GetAppName(reviewApp),
-		Override:  &reviewApp.Spec.CoreService,
-		Client:    reviewAppClient,
-		Schema:    reviewAppSchema,
-		Ctx:       &ctx,
-		Req:       &req,
-		ReviewApp: reviewApp,
+		Name:        constants.GetCoreServiceName(application),
+		NameSpace:   application.Namespace,
+		Port:        int32(constants.GetCoreServicePort(application)),
+		NodePort:    int32(constants.GetCoreServiceNodePort(application)),
+		AppName:     constants.GetAppName(application),
+		Override:    &application.Spec.CoreService,
+		Client:      applicationClient,
+		Schema:      applicationSchema,
+		Ctx:         &ctx,
+		Req:         &req,
+		Application: application,
 	}
 	_, err = coreService.Get()
 	if err != nil {
@@ -99,17 +99,17 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Create Core Socket Service
 	coreSocketService := resources.Service{
-		Name:      constants.GetCoreSocketServiceName(reviewApp),
-		NameSpace: reviewApp.Namespace,
-		Port:      int32(constants.GetCoreServiceSocketPort(reviewApp)),
-		NodePort:  int32(constants.GetCoreServiceSocketNodePort(reviewApp)),
-		AppName:   constants.GetAppName(reviewApp),
-		Override:  &reviewApp.Spec.CoreService,
-		Client:    reviewAppClient,
-		Schema:    reviewAppSchema,
-		Ctx:       &ctx,
-		Req:       &req,
-		ReviewApp: reviewApp,
+		Name:        constants.GetCoreSocketServiceName(application),
+		NameSpace:   application.Namespace,
+		Port:        int32(constants.GetCoreServiceSocketPort(application)),
+		NodePort:    int32(constants.GetCoreServiceSocketNodePort(application)),
+		AppName:     constants.GetAppName(application),
+		Override:    &application.Spec.CoreService,
+		Client:      applicationClient,
+		Schema:      applicationSchema,
+		Ctx:         &ctx,
+		Req:         &req,
+		Application: application,
 	}
 	_, err = coreSocketService.Get()
 	if err != nil {
@@ -119,17 +119,17 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Create Ui Service
 	coreUiService := resources.Service{
-		Name:      constants.GetUiServiceName(reviewApp),
-		NameSpace: reviewApp.Namespace,
-		Port:      int32(constants.GetUiServicePort(reviewApp)),
-		NodePort:  int32(constants.GetUiServiceNodePort(reviewApp)),
-		AppName:   constants.GetAppName(reviewApp),
-		Override:  &reviewApp.Spec.UiService,
-		Client:    reviewAppClient,
-		Schema:    reviewAppSchema,
-		Ctx:       &ctx,
-		Req:       &req,
-		ReviewApp: reviewApp,
+		Name:        constants.GetUiServiceName(application),
+		NameSpace:   application.Namespace,
+		Port:        int32(constants.GetUiServicePort(application)),
+		NodePort:    int32(constants.GetUiServiceNodePort(application)),
+		AppName:     constants.GetAppName(application),
+		Override:    &application.Spec.UiService,
+		Client:      applicationClient,
+		Schema:      applicationSchema,
+		Ctx:         &ctx,
+		Req:         &req,
+		Application: application,
 	}
 	_, err = coreUiService.Get()
 	if err != nil {
@@ -139,13 +139,13 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Create Cluster Role
 	clusterRole := resources.ClusterRole{
-		Name:      constants.GetClusterRoleName(reviewApp),
-		NameSpace: reviewApp.Namespace,
-		Client:    reviewAppClient,
-		Schema:    reviewAppSchema,
-		Ctx:       &ctx,
-		Req:       &req,
-		ReviewApp: reviewApp,
+		Name:        constants.GetClusterRoleName(application),
+		NameSpace:   application.Namespace,
+		Client:      applicationClient,
+		Schema:      applicationSchema,
+		Ctx:         &ctx,
+		Req:         &req,
+		Application: application,
 	}
 
 	_, err = clusterRole.Get()
@@ -155,15 +155,15 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Create Cluster Role Binding
 	clusterRoleBinding := resources.ClusterRoleBinding{
-		Name:               constants.GetClusterRoleBindingName(reviewApp),
-		NameSpace:          reviewApp.Namespace,
-		ServiceAccountName: constants.GetServiceAccountName(reviewApp),
-		ClusterRoleName:    constants.GetClusterRoleName(reviewApp),
-		Client:             reviewAppClient,
-		Schema:             reviewAppSchema,
+		Name:               constants.GetClusterRoleBindingName(application),
+		NameSpace:          application.Namespace,
+		ServiceAccountName: constants.GetServiceAccountName(application),
+		ClusterRoleName:    constants.GetClusterRoleName(application),
+		Client:             applicationClient,
+		Schema:             applicationSchema,
 		Ctx:                &ctx,
 		Req:                &req,
-		ReviewApp:          reviewApp,
+		Application:        application,
 	}
 	_, err = clusterRoleBinding.Get()
 	if err != nil {
@@ -173,13 +173,13 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	// Create Deployment
 	deployment := &v1.Deployment{}
 	err = r.Get(ctx, client.ObjectKey{
-		Namespace: reviewApp.Namespace,
-		Name:      constants.GetDeploymentName(reviewApp),
+		Namespace: application.Namespace,
+		Name:      constants.GetDeploymentName(application),
 	}, deployment)
 	if err != nil {
-		deployment := newDeployment(reviewApp)
+		deployment := newDeployment(application)
 
-		if err := controllerutil.SetControllerReference(reviewApp, deployment, r.Scheme); err != nil {
+		if err := controllerutil.SetControllerReference(application, deployment, r.Scheme); err != nil {
 			return reconcile.Result{}, err
 		}
 
@@ -189,7 +189,7 @@ func (r *ReviewAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 	} else if err == nil {
 		// Deployment exists, update it
-		updatedDeployment := updateDeployment(newDeployment(reviewApp))
+		updatedDeployment := updateDeployment(newDeployment(application))
 		if err := r.Update(ctx, updatedDeployment); err != nil {
 			return reconcile.Result{}, err
 		}
@@ -230,7 +230,7 @@ func newDeployment(app *rociiov1beta1.Application) *v1.Deployment {
 			Value: "",
 		},
 		{
-			Name:  "REVIEWAPP_NAMESPACE",
+			Name:  "ROCINANTE_NAMESPACE",
 			Value: app.Namespace,
 		},
 		{
@@ -363,7 +363,7 @@ func newDeployment(app *rociiov1beta1.Application) *v1.Deployment {
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ReviewAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ApplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&rociiov1beta1.Application{}).
 		Complete(r)

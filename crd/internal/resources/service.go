@@ -14,18 +14,18 @@ import (
 )
 
 type Service struct {
-	Name      string
-	NameSpace string
-	Port      int32
-	NodePort  int32
-	AppName   string
-	Override  *v1core.Service
-	instance  *v1core.Service
-	Client    client.Client
-	Schema    *runtime.Scheme
-	Ctx       *context.Context
-	Req       *ctrl.Request
-	ReviewApp *rociiov1beta1.ReviewApp
+	Name        string
+	NameSpace   string
+	Port        int32
+	NodePort    int32
+	AppName     string
+	Override    *v1core.Service
+	instance    *v1core.Service
+	Client      client.Client
+	Schema      *runtime.Scheme
+	Ctx         *context.Context
+	Req         *ctrl.Request
+	Application *rociiov1beta1.Application
 }
 
 func (receiver *Service) Create() {
@@ -64,11 +64,11 @@ func (receiver *Service) Get() (*v1core.Service, error) {
 
 	err := receiver.Client.Get(*receiver.Ctx, client.ObjectKey{
 		Name:      receiver.Name,
-		Namespace: receiver.ReviewApp.Namespace,
+		Namespace: receiver.Application.Namespace,
 	}, receiver.instance)
 
 	if err != nil {
-		if err := controllerutil.SetControllerReference(receiver.ReviewApp, receiver.instance, receiver.Schema); err != nil {
+		if err := controllerutil.SetControllerReference(receiver.Application, receiver.instance, receiver.Schema); err != nil {
 			return nil, err
 		}
 

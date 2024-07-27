@@ -13,14 +13,14 @@ import (
 )
 
 type ServiceAccount struct {
-	Name      string
-	NameSpace string
-	instance  *v1core.ServiceAccount
-	Client    client.Client
-	Schema    *runtime.Scheme
-	Ctx       *context.Context
-	Req       *ctrl.Request
-	ReviewApp *rociiov1beta1.ReviewApp
+	Name        string
+	NameSpace   string
+	instance    *v1core.ServiceAccount
+	Client      client.Client
+	Schema      *runtime.Scheme
+	Ctx         *context.Context
+	Req         *ctrl.Request
+	Application *rociiov1beta1.Application
 }
 
 func (receiver *ServiceAccount) Create() {
@@ -50,7 +50,7 @@ func (receiver *ServiceAccount) Get() (*v1core.ServiceAccount, error) {
 
 	if err != nil {
 		fmt.Println("err", err.Error())
-		if err := controllerutil.SetControllerReference(receiver.ReviewApp, receiver.instance, receiver.Schema); err != nil {
+		if err := controllerutil.SetControllerReference(receiver.Application, receiver.instance, receiver.Schema); err != nil {
 			return nil, err
 		}
 

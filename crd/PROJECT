@@ -13,7 +13,7 @@ resources:
     namespaced: true
   controller: true
   domain: roci.io
-  kind: ReviewApp
+  kind: Application
   path: github.com/idalavye/rocinante/api/v1beta1
   version: v1beta1
 version: "3"

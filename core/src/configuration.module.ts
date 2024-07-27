@@ -20,7 +20,7 @@ import { K8sConfigProviderConfig } from './generator/k8s/configs/k8s-config-prov
       useFactory: (configService: ConfigService): K8sConfigProviderConfig => ({
         overrideDeployment: configService.get('K8S_DEPLOYMENT_OVERRIDE'),
         overrideService: configService.get('K8S_SERVICE_OVERRIDE'),
-        namespace: configService.get('REVIEWAPP_NAMESPACE'),
+        namespace: configService.get('ROCINANTE_NAMESPACE'),
         host: configService.get('K8S_HOST'),
       }),
       inject: [ConfigService],

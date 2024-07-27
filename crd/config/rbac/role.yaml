@@ -7,12 +7,12 @@ rules:
 - apiGroups:
   - '*'
   resources:
+  - applications
   - apps
   - clusterrolebindings
   - clusterroles
   - deployments
   - pods
-  - reviewapps
   - serviceaccounts
   - services
   verbs:
@@ -26,12 +26,12 @@ rules:
 - apiGroups:
   - '*'
   resources:
+  - applications/finalizers
   - apps
   - clusterrolebindings
   - clusterroles
   - deployments
   - pods
-  - reviewapps/finalizers
   - serviceaccounts
   - services
   verbs:
@@ -39,12 +39,12 @@ rules:
 - apiGroups:
   - '*'
   resources:
+  - applications/status
   - apps
   - clusterrolebindings
   - clusterroles
   - deployments
   - pods
-  - reviewapps/status
   - serviceaccounts
   - services
   verbs:
