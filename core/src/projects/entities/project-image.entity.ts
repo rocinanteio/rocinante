@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('project_image')
 export class ProjectImageEntity {
   @PrimaryColumn()
   name: string;

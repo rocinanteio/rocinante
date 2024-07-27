@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { DeploymentEntity } from '../../k8s/entities/deployment.entity';
 
-@Entity()
+@Entity('project')
 export class ProjectEntity {
   @PrimaryGeneratedColumn()
   id: number;
